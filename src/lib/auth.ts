@@ -13,6 +13,7 @@ export const authOptions: AuthOptions = {
     ],
     secret: process.env.GOOGLE_SECRET as string,
     callbacks: {
+        // eslint-disable-next-line
         async session({ session, token, user }) {
             session.user = {...session.user, id: user.id} as {
                 id: string,
