@@ -19,7 +19,7 @@ export const Header = () => {
 
     return (
         <header className="flex w-full items-center px-2 py-4 bg-white h-20 drop-shadow" >
-            <div className="w-full max-w-7xl flex justify-between items-center" >
+            <div className="w-full max-w-7xl flex justify-between items-center m-auto" >
                 <Link href="/" >
                     <h1 className="uppercase text-2xl font-bold pl-1 hover:tracking-wider duration-300" >
                         <span className="text-blue-500" >dev</span> controle
