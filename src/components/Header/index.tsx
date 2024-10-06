@@ -40,7 +40,7 @@ export const Header = () => {
                                 <FiUser size={28} color="#4b5563" />
                             </MenuButton>
                             <MenuItems
-                                anchor="bottom"
+                                anchor="bottom end"
                                 className="bg-slate-100 w-[160px] rounded-[6px] flex items-center justify-center flex-col mt-1 drop-shadow border border-slate-300"
                             >
                                 <MenuItem>
