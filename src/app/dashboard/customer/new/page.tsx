@@ -26,9 +26,9 @@ export default async function New() {
                         Novo Cliente
                     </h1>
                 </div>
-                <div>
+                <section>
                     <NewCustomerForm />
-                </div>
+                </section>
             </main>
         </Container>
     )
