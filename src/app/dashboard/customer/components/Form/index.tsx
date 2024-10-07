@@ -45,6 +45,7 @@ export const NewCustomerForm = ({ userId }: { userId: string }) => {
             userId
         })
 
+        router.refresh()
         router.replace("/dashboard/customer")
     }
 
