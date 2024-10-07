@@ -27,7 +27,7 @@ export default async function New() {
                     </h1>
                 </div>
                 <section>
-                    <NewCustomerForm />
+                    <NewCustomerForm userId={session.user.id} />
                 </section>
             </main>
         </Container>
