@@ -63,7 +63,6 @@ export default async function NewTicket() {
                         name="name"
                         placeholder="Digite o nome do chamado..."
                         required
-                        className="w-full border-2 rounded-md px-2 mb-2 h-11"
                     />
                     <label className="mb-1 font-medium text-lg" >
                         Descreva o problema:
