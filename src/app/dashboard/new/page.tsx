@@ -18,6 +18,31 @@ export default async function NewTicket() {
         }
     })
 
+    async function handleRegisterTicket(formData: FormData) {
+        "use server"
+
+        const name = formData.get("name")
+        const description = formData.get("description")
+        const customerId = formData.get("customer")
+
+        if (!name || !description || !customerId) {
+            return
+        }
+
+        await prismaClient.ticket.create({
+            data: {
+                name: name as string,
+                description: description as string,
+                customerId: customerId as string,
+                userId: session?.user.id,
+                status: "ABERTO"
+
+            }
+        })
+
+        redirect("/dashboard")
+    }
+
     return (
         <Container>
             <main className="mt-9 mb-2" >
@@ -29,12 +54,13 @@ export default async function NewTicket() {
                         Novo Chamado
                     </h1>
                 </div>
-                <form className="flex flex-col mt-6 " >
+                <form className="flex flex-col mt-6" action={handleRegisterTicket} >
                     <label className="mb-1 font-medium text-lg" >
                         Nome do chamado:
                     </label>
                     <input
                         type="text"
+                        name="name"
                         placeholder="Digite o nome do chamado..."
                         required
                         className="w-full border-2 rounded-md px-2 mb-2 h-11"
@@ -44,6 +70,7 @@ export default async function NewTicket() {
                     </label>
                     <textarea
                         placeholder=" Descreva o problema..."
+                        name="description"
                         required
                         className="w-full border-2 rounded-md px-2 mb-2 h-24 resize-none"
                     >
@@ -55,6 +82,8 @@ export default async function NewTicket() {
                         <select
                             className="w-full border-2 rounded-md px-2 mb-2 h-11 bg-white"
                             required
+                            name="customer"
+                            defaultValue=""
                         >
                             <option value="" disabled selected >Selecione um cliente...</option>
                             {customers && customers.map((customer) => (
