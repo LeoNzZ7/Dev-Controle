@@ -1,7 +1,23 @@
 import { Container } from "@/components/Container";
+import { authOptions } from "@/lib/auth";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import prismaClient from "@/lib/prisma"
 
-export default function NewTicket() {
+export default async function NewTicket() {
+    const session = await getServerSession(authOptions)
+
+    if (!session || !session.user) {
+        redirect("/")
+    }
+
+    const customers = await prismaClient.customer.findMany({
+        where: {
+            userId: session.user.id,
+        }
+    })
+
     return (
         <Container>
             <main className="mt-9 mb-2" >
@@ -35,12 +51,33 @@ export default function NewTicket() {
                     <label className="mb-1 font-medium text-lg" >
                         Selecione o cliente:
                     </label>
-                    <select
-                        className="w-full border-2 rounded-md px-2 mb-2 h-11 bg-white"
-                        required
+                    {customers.length !== 0 ? (
+                        <select
+                            className="w-full border-2 rounded-md px-2 mb-2 h-11 bg-white"
+                            required
+                        >
+                            <option value="" disabled selected >Selecione um cliente...</option>
+                            {customers && customers.map((customer) => (
+                                <option value={customer.id} key={customer.id}>{customer.name}</option>
+                            ))}
+                        </select>
+                    ) : (
+                        <span>
+                            Você não possui clientes cadastrados. Cadastre um novo cliente
+                            <Link
+                                href="/dashboard/customer/new"
+                                className="text-blue-500 hover:text-blue-700"
+                            > aqui
+                            </Link>.
+                        </span>
+                    )}
+                    <button
+                        className="bg-blue-500 text-white font-bold px-2 h-11 rounded-md my-4 hover:bg-blue-600 duration-300 cursor-pointer disabled:bg-gray-400 disabled:cursor-not-allowed"
+                        type="submit"
+                        disabled={customers.length === 0}
                     >
-                        <option value="cliente 1" >Cliente 1</option>
-                    </select>
+                        Cadastrar Chamado
+                    </button>
                 </form>
             </main>
         </Container>
