@@ -50,7 +50,7 @@ export async function DELETE(request: Request) {
         }
     })
 
-    if(findTickets) {
+    if(findTickets?.status === "ABERTO") {
         return NextResponse.json({ error: "Cliente possui tickets atribuídos, não pode ser excluído." }, { status: 400 })
     }
 

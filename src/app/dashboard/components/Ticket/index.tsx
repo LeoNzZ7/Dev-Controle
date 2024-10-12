@@ -2,9 +2,11 @@
 
 import { CustomerProps } from "@/utils/customer.type"
 import { TicketProps } from "@/utils/ticket.types"
-import { FiCheckSquare, FiFile } from "react-icons/fi"
+import { FiCheckSquare, FiFile, FiTrash2 } from "react-icons/fi"
 import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
+import { useContext } from "react"
+import { ModalContext } from "@/providers/modal"
 
 interface TicketItemProps {
     ticket: TicketProps
@@ -12,6 +14,8 @@ interface TicketItemProps {
 }
 
 export const Ticket = ({ ticket, customer }: TicketItemProps) => {
+    const { handleModalVisible, setDetailsTicket } = useContext(ModalContext)
+
     const router = useRouter()
 
     async function handleChangeStatus() {
@@ -24,6 +28,28 @@ export const Ticket = ({ ticket, customer }: TicketItemProps) => {
         } catch (err) {
             console.log(err)
         }
+    }
+
+    async function handleDeleteTicket() {
+        try {
+            await api.delete("/api/ticket", {
+                params: {
+                    id: ticket.id
+                }
+            })
+
+            router.refresh()
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    function handleOpenModal() {
+        setDetailsTicket({
+            ticket,
+            customer
+        })
+        handleModalVisible()
     }
 
     return (
@@ -44,13 +70,21 @@ export const Ticket = ({ ticket, customer }: TicketItemProps) => {
                 </td>
                 <td className="text-left">
                     <button
+                        onClick={handleOpenModal}
+                        className="mr-2"
+                    >
+                        <FiFile size={24} color="#3b82f6" />
+                    </button>
+                    <button
                         onClick={handleChangeStatus}
-                        className="mr-3"
+                        className="mr-2"
                     >
                         <FiCheckSquare size={24} color="#131313" />
                     </button>
-                    <button>
-                        <FiFile size={24} color="#3b82f6" />
+                    <button
+                        onClick={handleDeleteTicket}
+                    >
+                        <FiTrash2 size={24} color="#ef4444" />
                     </button>
                 </td>
             </tr>

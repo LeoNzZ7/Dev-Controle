@@ -3,7 +3,6 @@
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, FormEvent, useState } from 'react';
 
-
 export const SearchForm = () => {
     const router = useRouter();
     const [name, setName] = useState('');
@@ -21,6 +20,7 @@ export const SearchForm = () => {
         router.push(`/dashboard?${query}`, undefined);
         router.refresh();
     };
+
 
     return (
         <form
@@ -40,7 +40,7 @@ export const SearchForm = () => {
                 value={status}
                 onChange={(e: ChangeEvent<HTMLSelectElement>) => setStatus(e.target.value)}
             >
-                <option value="">Todos</option>
+                <option value="TODOS">Todos</option>
                 <option value="ABERTO">Aberto</option>
                 <option value="FECHADO">Fechado</option>
             </select>

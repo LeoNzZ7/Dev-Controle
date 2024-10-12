@@ -7,7 +7,9 @@ import { Ticket } from "./components/Ticket";
 import prismaClient from "@/lib/prisma"
 import { SearchForm } from "./components/SearchForm";
 
-export default async function Dashboard({ searchParams }: { searchParams: { name?: string, status?: string, date?: string } }) {
+export default async function Dashboard
+    ({ searchParams }: { searchParams: { name?: string, status?: string, date?: string } }) {
+
     const session = await getServerSession(authOptions);
     if (!session || !session.user) {
         redirect("/");
@@ -16,7 +18,7 @@ export default async function Dashboard({ searchParams }: { searchParams: { name
     const tickets = await prismaClient.ticket.findMany({
         where: {
             userId: session?.user.id as string,
-            status: searchParams.status === "" ? undefined : searchParams.status,
+            status: searchParams.status === "TODOS" ? undefined : searchParams.status || "ABERTO",
             customer: {
                 name: {
                     contains: searchParams.name || "",
@@ -29,12 +31,16 @@ export default async function Dashboard({ searchParams }: { searchParams: { name
         },
         include: {
             customer: true
+        },
+        orderBy: {
+            created_at: "desc"
         }
     });
 
     return (
         <Container>
-            <main className="mt-9 mb-2" >
+            <main
+                className="mt-9 mb-2" >
                 <div className="flex items-center justify-between" >
                     <h1 className="text-3xl font-bold" >
                         Chamados
