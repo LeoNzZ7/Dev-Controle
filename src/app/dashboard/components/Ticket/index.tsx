@@ -36,7 +36,9 @@ export const Ticket = ({ ticket, customer }: TicketItemProps) => {
                     {ticket.created_at?.toLocaleDateString("pt-br")}
                 </td>
                 <td className="text-left" >
-                    <span className="bg-green-500 px-2 py-1 rounded-lg" >
+                    <span
+                        style={{ backgroundColor: ticket.status === "FECHADO" ? "#ef4444" : "#22c55e" }}
+                        className="px-2 py-1 rounded-lg" >
                         {ticket.status}
                     </span>
                 </td>

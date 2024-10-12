@@ -5,23 +5,32 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Ticket } from "./components/Ticket";
 import prismaClient from "@/lib/prisma"
+import { SearchForm } from "./components/SearchForm";
 
-export default async function Dashboard() {
-    const session = await getServerSession(authOptions)
-
+export default async function Dashboard({ searchParams }: { searchParams: { name?: string, status?: string, date?: string } }) {
+    const session = await getServerSession(authOptions);
     if (!session || !session.user) {
-        redirect("/")
+        redirect("/");
     }
 
     const tickets = await prismaClient.ticket.findMany({
         where: {
             userId: session?.user.id as string,
-            status: "ABERTO",
+            status: searchParams.status === "" ? undefined : searchParams.status,
+            customer: {
+                name: {
+                    contains: searchParams.name || "",
+                    mode: 'insensitive'
+                }
+            },
+            created_at: searchParams.date ? {
+                gte: new Date(Date.now() - parseInt(searchParams.date) * 24 * 60 * 60 * 1000)
+            } : undefined
         },
         include: {
             customer: true
         }
-    })
+    });
 
     return (
         <Container>
@@ -37,46 +46,7 @@ export default async function Dashboard() {
                         Abrir chamado
                     </Link>
                 </div>
-
-                {/* 
-                Futura implementação
-
-                <nav>
-                    <form
-                        className="flex items-center my-5 rounded-md " >
-                        <input
-                            type="text"
-                            className="w-full h-11 rounded-md bg-gray-100 hover:bg-gray-200 focus:bg-gray-200 duration-300 px-2 rounded-r-none outline-none"
-                            placeholder="Buscar pelo nome do cliente"
-                            name="name"
-                        />
-                        <select
-                            className="outline-none bg-gray-100 h-11 border-l-2 border-gray-200 hover:bg-gray-200 focus:bg-gray-200 duration-300 cursor-pointer"
-                            defaultValue="ABERTO"
-                            name="status"
-                        >
-                            <option selected value="">Todos</option>
-                            <option value="ABERTO">Aberto</option>
-                            <option value="FECHADO">Fechado</option>
-                        </select>
-                        <select
-                            className="outline-none bg-gray-100 h-11 border-l-2 border-gray-200 hover:bg-gray-200 focus:bg-gray-200 duration-300 cursor-pointer"
-                            defaultValue="3"
-                            name="date"
-                        >
-                            <option value="24">Ultimas 24 horas</option>
-                            <option value="3">Últimos 3 dias</option>
-                            <option selected value="7">Últimos 7 dias</option>
-                            <option value="30">Últimos 30 dias</option>
-                        </select>
-                        <button
-                            type="submit"
-                            className="h-11 bg-blue-500 px-4 py-2 rounded rounded-l-none text-white hover:bg-blue-600 duration-300 cursor-pointer" >
-                            Buscar
-                        </button>
-                    </form>
-                </nav> */}
-
+                <SearchForm />
                 <table className="min-w-full my-2" >
                     <thead>
                         <tr>
@@ -104,4 +74,5 @@ export default async function Dashboard() {
             </main>
         </Container>
     )
-} 
+}
+
