@@ -6,9 +6,10 @@ import { FeedbackType, feedbackTypes } from "../index";
 import { ScreenshotButton } from "../screenshotButton";
 import { BsArrowLeft } from "react-icons/bs";
 import { Loading } from "../loading";
-import Image from "next/image";
 import { FaBug, FaRegLightbulb } from "react-icons/fa";
 import { TfiThought } from "react-icons/tfi";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "@/services/src/services/firebaseConnection";
 
 type Props = {
     feedbackType: FeedbackType;
@@ -18,25 +19,33 @@ type Props = {
 
 export const FeedbackContentStep = ({ feedbackType, onFeedbackRestart, onFeedbackSend }: Props) => {
     const feedbackTypeInfo = feedbackTypes[feedbackType];
-
     const [screenshot, setScreenshot] = useState<string | null>(null);
     const [comment, setComment] = useState('');
     const [isSendingFeedback, setIsSendingFeedback] = useState(false)
 
     const handleSubmitFeedback = async (event: FormEvent) => {
         event.preventDefault()
-        setIsSendingFeedback(true)
 
-        setTimeout(() => {
+        setIsSendingFeedback(true)
+        try {
+            addDoc(collection(db, 'feedbacks'), {
+                feedbackType,
+                comment,
+                screenshot,
+                timestamp: new Date(),
+            })
+            const foto = document.createElement(screenshot as string)
             setIsSendingFeedback(false)
             onFeedbackSend()
             setComment('')
             setScreenshot(null)
-            setTimeout(() => {
-                onFeedbackRestart()
-                console.log(screenshot)
-            }, 2000)
-        }, 2000)
+        } catch (error) {
+            console.error("Failed to send feedback:", error)
+            setIsSendingFeedback(false)
+            onFeedbackSend()
+            setComment('')
+            setScreenshot(null)
+        }
     }
 
     return (

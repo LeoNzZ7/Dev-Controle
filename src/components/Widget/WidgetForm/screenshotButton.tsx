@@ -18,7 +18,6 @@ export const ScreenshotButton = ({ onScreenshotTook, screenshot }: Props) => {
 
         const canvas = await html2canvas(document.querySelector('html')!);
         const base64image = canvas.toDataURL('image/png');
-
         onScreenshotTook(base64image);
         setIsTakingScreenShot(false);
     };

@@ -1,12 +1,10 @@
 "use client"
 
 import { useState } from "react";
-import bugImageUrl from '../../../assets/bug.svg';
-import ideaImageUrl from '../../../assets/idea.svg';
-import thoughtImageUrl from '../../../assets/thought.svg';
-import { FeedBackTypeStep } from "./steps/feedbackType";
+
 import { FeedbackContentStep } from "./steps/feedbackContent";
 import { FeedbackSuccessStep } from "./steps/feedbackSuccessStep";
+import { FeedBackTypeStep } from "./steps/feedbackType";
 
 export const feedbackTypes = {
     BUG: {
