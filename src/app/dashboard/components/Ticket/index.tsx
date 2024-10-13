@@ -7,6 +7,7 @@ import { api } from "@/lib/api"
 import { useRouter } from "next/navigation"
 import { useContext } from "react"
 import { ModalContext } from "@/providers/modal"
+import toast from "react-hot-toast"
 
 interface TicketItemProps {
     ticket: TicketProps
@@ -82,7 +83,30 @@ export const Ticket = ({ ticket, customer }: TicketItemProps) => {
                         <FiCheckSquare size={24} color="#131313" />
                     </button>
                     <button
-                        onClick={handleDeleteTicket}
+                        onClick={() => {
+                            toast((t) => (
+                                <div className="flex flex-col " >
+                                    <span className="font-bold" >
+                                        tem certeza que deseja deletar esse chamado?
+                                    </span>
+                                    <div className="flex gap-2 w-full rounded" >
+                                        <button
+                                            className="w-full bg-green-500 hover:bg-green-600 duration-300 rounded text-white font-bold"
+                                            onClick={() => toast.dismiss(t.id)} >
+                                            Não
+                                        </button>
+                                        <button
+                                            className="w-full border-l border-gray-500 bg-red-500 hover:bg-red-600 duration-300 rounded text-white font-bold"
+                                            onClick={() => {
+                                                handleDeleteTicket()
+                                                toast.dismiss(t.id)
+                                            }}>
+                                            Sim
+                                        </button>
+                                    </div>
+                                </div>
+                            ));
+                        }}
                     >
                         <FiTrash2 size={24} color="#ef4444" />
                     </button>

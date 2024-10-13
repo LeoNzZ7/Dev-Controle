@@ -4,6 +4,7 @@ import './globals.css'
 import { AuthProvider } from "@/providers/auth";
 import { ModalProvider } from "@/providers/modal";
 import { Widget } from "@/components/Widget";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Dev Controle - Seu sistema de gerenciamento.",
@@ -23,6 +24,10 @@ export default function RootLayout({
             <Header />
             {children}
             <Widget />
+            <Toaster
+              position="top-right"
+              reverseOrder={true}
+            />
           </ModalProvider>
         </AuthProvider>
       </body >

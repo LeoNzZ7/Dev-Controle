@@ -24,29 +24,28 @@ export const FeedbackContentStep = ({ feedbackType, onFeedbackRestart, onFeedbac
     const [isSendingFeedback, setIsSendingFeedback] = useState(false)
 
     const handleSubmitFeedback = async (event: FormEvent) => {
-        event.preventDefault()
+        event.preventDefault();
+        setIsSendingFeedback(true);
 
-        setIsSendingFeedback(true)
         try {
-            addDoc(collection(db, 'feedbacks'), {
+            await addDoc(collection(db, 'feedbacks'), {
                 feedbackType,
                 comment,
                 screenshot,
                 timestamp: new Date(),
-            })
-            const foto = document.createElement(screenshot as string)
-            setIsSendingFeedback(false)
-            onFeedbackSend()
-            setComment('')
-            setScreenshot(null)
+            });
+
+            setIsSendingFeedback(false);
+            onFeedbackSend();
+            setComment('');
+            setScreenshot(null);
+
         } catch (error) {
-            console.error("Failed to send feedback:", error)
-            setIsSendingFeedback(false)
-            onFeedbackSend()
-            setComment('')
-            setScreenshot(null)
+            console.error("Failed to send feedback:", error);
+            setIsSendingFeedback(false);
+            throw error;
         }
-    }
+    };
 
     return (
         <>
@@ -82,7 +81,7 @@ export const FeedbackContentStep = ({ feedbackType, onFeedbackRestart, onFeedbac
                     <button
                         type="submit"
                         disabled={comment.length === 0 || isSendingFeedback ? true : false}
-                        className="p-2 bg-brand-100 rounded-md border-transparent flex-1 flex justify-center items-center text-sm hover:bg-brand-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-900 focus:ring-brand-500 disabled:opacity-50 disabled:hover:bg-brand-100"
+                        className="p-2 bg-blue-500 rounded-md border-transparent flex-1 flex justify-center items-center text-sm hover:bg-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-neutral-900 focus:ring-blue-500 disabled:opacity-50 disabled:hover:bg-blue-500"
                     >
                         {isSendingFeedback ? <Loading /> : 'Enviar Feedback'}
                     </button>
@@ -90,4 +89,5 @@ export const FeedbackContentStep = ({ feedbackType, onFeedbackRestart, onFeedbac
             </form>
         </>
     );
-}
+};
+
