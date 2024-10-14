@@ -5,8 +5,9 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { FiSearch, FiX } from "react-icons/fi"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
 import { FormTicket } from "./components/FormTicket"
+import { api } from "@/lib/api"
 
 const schema = z.object({
     email: z.string().email("Digite uma email válido de um cliente cadastrado!").min(1, "O campo email é obrigatório")
@@ -25,7 +26,7 @@ export default function OpenTicket() {
         name: "josé"
     })
 
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
+    const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
         defaultValues: {
             email: ""
@@ -35,6 +36,23 @@ export default function OpenTicket() {
     const handleClearCustomer = () => {
         setCustomer(null)
         setValue("email", "")
+    }
+
+    async function handleSearchCustomer(data: FormData) {
+        const response = await api.get('/api/customer', {
+            params: { email: data.email },
+        })
+
+        if (response.data === null) {
+            setError("email", {
+                message: "Cliente não encontrado. Verifique o email digitado.",
+                type: "custom"
+            })
+
+            return
+        }
+
+        setCustomer(response.data)
     }
 
     return (
@@ -55,7 +73,9 @@ export default function OpenTicket() {
                         </button>
                     </div>
                 ) : (
-                    <form className="bg-slate-200 py-6 px-2 rounded border-2" >
+                    <form
+                        onSubmit={handleSubmit(handleSearchCustomer)}
+                        className="bg-slate-200 py-6 px-2 rounded border-2" >
                         <div className="flex flex-col gap-3" >
                             <Input
                                 name="email"

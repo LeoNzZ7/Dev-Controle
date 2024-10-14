@@ -32,7 +32,7 @@ export const FormTicket = () => {
                 className="w-full border-2 rounded-md h-24 resize-none mb-2 px-2"
                 placeholder="Descreva seu problema"
                 id="description"
-                {...register("")}
+                {...register("description")}
             >
             </textarea>
             {errors.description?.message && (
@@ -40,7 +40,9 @@ export const FormTicket = () => {
                     {errors.description?.message}
                 </span>
             )}
-            <button type="submit" className="bg-blue-500 rounded-md w-full h-11 px-2 text-white font-bold" >
+            <button
+                type="submit"
+                className="bg-blue-500 rounded-md w-full h-11 px-2 text-white font-bold hover:bg-blue-600 duration-300" >
                 Criar chamado
             </button>
         </form>
