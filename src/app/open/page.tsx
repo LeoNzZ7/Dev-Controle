@@ -18,13 +18,11 @@ type FormData = z.infer<typeof schema>
 interface CustomerData {
     id: string
     name: string
+    userId: string
 }
 
 export default function OpenTicket() {
-    const [customer, setCustomer] = useState<CustomerData | null>({
-        id: "josé",
-        name: "josé"
-    })
+    const [customer, setCustomer] = useState<CustomerData | null>(null)
 
     const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema),
@@ -93,7 +91,7 @@ export default function OpenTicket() {
                     </form>
                 )}
 
-                {customer !== null && <FormTicket customerId={customer.id} />}
+                {customer !== null && < FormTicket customerId={customer.id} userId={customer.userId} />}
             </main>
         </div>
     )

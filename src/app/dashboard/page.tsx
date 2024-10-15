@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Ticket } from "./components/Ticket";
 import prismaClient from "@/lib/prisma"
 import { SearchForm } from "./components/SearchForm";
+import { ButtonRefresh } from "./components/Button";
 
 export default async function Dashboard
     ({ searchParams }: { searchParams: { name?: string, status?: string, date?: string } }) {
@@ -23,11 +24,15 @@ export default async function Dashboard
                 name: {
                     contains: searchParams.name || "",
                     mode: 'insensitive'
+                },
+                User: {
+                    id: session?.user.id,
                 }
             },
             created_at: searchParams.date ? {
                 gte: new Date(Date.now() - parseInt(searchParams.date) * 24 * 60 * 60 * 1000)
-            } : undefined
+            } : undefined,
+
         },
         include: {
             customer: true
@@ -45,12 +50,15 @@ export default async function Dashboard
                     <h1 className="text-3xl font-bold" >
                         Chamados
                     </h1>
-                    <Link
-                        className="bg-blue-500 px-4 py-1 rounded text-white hover:bg-blue-600 duration-300"
-                        href="/dashboard/new"
-                    >
-                        Abrir chamado
-                    </Link>
+                    <div className="flex items-center gap-2">
+                        <ButtonRefresh />
+                        <Link
+                            className="bg-blue-500 px-4 py-1 rounded text-white hover:bg-blue-600 duration-300"
+                            href="/dashboard/new"
+                        >
+                            Abrir chamado
+                        </Link>
+                    </div>
                 </div>
                 <SearchForm />
                 <table className="min-w-full my-2" >

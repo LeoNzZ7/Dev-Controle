@@ -4,13 +4,11 @@ import { authOptions } from "@/lib/auth";
 import prismaClient from "@/lib/prisma"
 
 export async function POST(request: Request) {
-    const { name, description, customerId } = await request.json();
+    const { name, description, customerId, userId } = await request.json();
 
-    if(customerId | name | description) {
+    if(!customerId || !name || !description) {
         return NextResponse.json({ error: "Invalid data"}, { status: 400 })
     } 
-
-
 
     try {
         await prismaClient.ticket.create({
@@ -18,7 +16,8 @@ export async function POST(request: Request) {
                 name,
                 description,
                 status: "ABERTO",
-                customerId: customerId
+                customerId,
+                userId
             }
         })
 
@@ -27,8 +26,6 @@ export async function POST(request: Request) {
     } catch (err) {
         return NextResponse.json({ error: "Failed create new ticket", err, status: 400})
     }
-
-    return NextResponse.json({  message: "Cadastrado com sucesso", status: 200 })
 }
 
 export async function PATCH(request: Request) {

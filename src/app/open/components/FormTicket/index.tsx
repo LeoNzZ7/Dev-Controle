@@ -13,20 +13,26 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>
 
-export const FormTicket = ({ customerId }: { customerId: string }) => {
+export const FormTicket = ({ customerId, userId }: { customerId: string, userId: string }) => {
     const { register, handleSubmit, setValue, formState: { errors } } = useForm<FormData>({
         resolver: zodResolver(schema)
     })
 
     async function handleRegisterTicket(data: FormData) {
-        const response = await api.post("/api/ticket", {
+        await api.post("/api/ticket", {
             name: data.name,
             description: data.description,
-            customerId: customerId
+            customerId: customerId,
+            userId: userId,
         })
 
-        console.log(response)
+
+        setValue("name", "")
+        setValue("description", "")
     }
+
+
+    console.log(customerId)
 
     return (
         <form
