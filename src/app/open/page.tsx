@@ -93,7 +93,7 @@ export default function OpenTicket() {
                     </form>
                 )}
 
-                {customer !== null && <FormTicket />}
+                {customer !== null && <FormTicket customerId={customer.id} />}
             </main>
         </div>
     )
