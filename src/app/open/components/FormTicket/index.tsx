@@ -5,10 +5,12 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { api } from "@/lib/api"
+import toast from "react-hot-toast"
+import axios from "axios"
 
 const schema = z.object({
-    name: z.string().min(1, "O campo nome do chamado é obrigatório"),
-    description: z.string().min(1, "O campo descrição do chamado é obrigatório")
+    name: z.string().min(1, "Este campo é obrigatório!"),
+    description: z.string().min(1, "Este campo é obrigatório!")
 })
 
 type FormData = z.infer<typeof schema>
@@ -19,20 +21,25 @@ export const FormTicket = ({ customerId, userId }: { customerId: string, userId:
     })
 
     async function handleRegisterTicket(data: FormData) {
-        await api.post("/api/ticket", {
-            name: data.name,
-            description: data.description,
-            customerId: customerId,
-            userId: userId,
-        })
+        try {
+            await api.post("/api/ticket", {
+                name: data.name,
+                description: data.description,
+                customerId: customerId,
+                userId: userId,
+            })
 
+            setValue("name", "")
+            setValue("description", "")
 
-        setValue("name", "")
-        setValue("description", "")
+            toast.success("Chamado cadastrado com sucesso!")
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const errorMessage = (error.response.data as { error: string }).error;
+                toast.error(errorMessage);
+            }
+        }
     }
-
-
-    console.log(customerId)
 
     return (
         <form
@@ -46,7 +53,7 @@ export const FormTicket = ({ customerId, userId }: { customerId: string, userId:
                 error={errors.name?.message}
                 register={register}
             />
-            <label className="mb-2 text-lg font-medium" >Descrição do chamado</label>
+            <label className="mb-2 text-lg font-medium">Descrição do chamado</label>
             <textarea
                 className="w-full border-2 rounded-md h-24 resize-none px-2"
                 placeholder="Descreva seu problema"
@@ -55,7 +62,7 @@ export const FormTicket = ({ customerId, userId }: { customerId: string, userId:
             >
             </textarea>
             {errors.description?.message && (
-                <span className="bg-red-500 mt-1 mb-4" >
+                <span className="text-red-500 mt-1 mb-4" >
                     {errors.description?.message}
                 </span>
             )}

@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation"
 import { useContext } from "react"
 import { ModalContext } from "@/providers/modal"
 import toast from "react-hot-toast"
+import axios from "axios"
 
 interface TicketItemProps {
     ticket: TicketProps
@@ -39,9 +40,13 @@ export const Ticket = ({ ticket, customer }: TicketItemProps) => {
                 }
             })
 
+            toast.success("Chamado deletado com sucesso!");
             router.refresh()
-        } catch (err) {
-            console.log(err)
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const errorMessage = (error.response.data as { error: string }).error;
+                toast.error(errorMessage);
+            }
         }
     }
 

@@ -2,6 +2,7 @@
 
 import { api } from "@/lib/api"
 import { CustomerProps } from "@/utils/customer.type"
+import axios from "axios"
 import { useRouter } from "next/navigation"
 import toast from "react-hot-toast"
 
@@ -17,22 +18,10 @@ export const CardCustomer = ({ customer }: { customer: CustomerProps }) => {
             })
 
             router.refresh()
-        } catch (err: unknown) {
-            if (err instanceof Error) {
-                console.error('Erro:', err.message);
-                toast.error(`Ocorreu um erro: ${err.message}`);
-            } else if (typeof err === 'object' && err !== null && 'json' in err) {
-                try {
-                    const errorData = await (err as any).json();
-                    console.error('Erro da API:', errorData.message);
-                    toast.error(`Erro da API: ${errorData.message}`);
-                } catch (jsonError) {
-                    console.error('Erro ao processar resposta da API:', jsonError);
-                    toast.error('Ocorreu um erro ao processar a resposta do servidor');
-                }
-            } else {
-                console.error('Erro desconhecido:', err);
-                toast.error('Ocorreu um erro desconhecido');
+        } catch (error) {
+            if (axios.isAxiosError(error) && error.response) {
+                const errorMessage = (error.response.data as { error: string }).error;
+                toast.error(errorMessage);
             }
         }
     }

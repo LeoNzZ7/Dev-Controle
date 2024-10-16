@@ -19,8 +19,6 @@ export default async function Customer() {
         }
     })
 
-    console.log(customers)
-
     return (
         <Container>
             <main className="mt-9 mb-2" >

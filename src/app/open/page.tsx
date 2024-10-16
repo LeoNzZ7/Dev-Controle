@@ -46,7 +46,6 @@ export default function OpenTicket() {
                 message: "Cliente não encontrado. Verifique o email digitado.",
                 type: "custom"
             })
-
             return
         }
 

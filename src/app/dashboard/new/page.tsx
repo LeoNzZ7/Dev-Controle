@@ -4,7 +4,6 @@ import { getServerSession } from "next-auth";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import prismaClient from "@/lib/prisma"
-import toast from "react-hot-toast";
 
 export default async function NewTicket() {
     const session = await getServerSession(authOptions)

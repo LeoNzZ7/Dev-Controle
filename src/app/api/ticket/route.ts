@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ message: "Chamado cadastrado com sucesso!" })
 
     } catch (err) {
-        return NextResponse.json({ error: "Failed create new ticket", err, status: 400})
+         return NextResponse.json({ message: "Failed create new ticket", error: err, status: 400 });
     }
 }
 
