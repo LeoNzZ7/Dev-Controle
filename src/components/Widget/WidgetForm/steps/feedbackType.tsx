@@ -22,7 +22,7 @@ export const FeedBackTypeStep = ({ onFeedbackChanged }: Props) => {
                         key={key}
                         className="bg-neutral-800 rounded-lg py-5 w-24 flex-1 flex flex-col items-center gap-2 border-2 border-transparent hover:border-blue-500 focus:border-blue-500 focus:outline-none transition-colors"
                         type="button"
-                        onClick={e => onFeedbackChanged(key as FeedbackType)}
+                        onClick={() => onFeedbackChanged(key as FeedbackType)}
                     >
                         {value.title === "ideia" ? (
                             <FaRegLightbulb size={26} />

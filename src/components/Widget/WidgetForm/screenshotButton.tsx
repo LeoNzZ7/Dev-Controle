@@ -30,7 +30,7 @@ export const ScreenshotButton = ({ onScreenshotTook, screenshot }: Props) => {
                 style={{
                     backgroundImage: `url(${screenshot})`
                 }}
-                onClick={e => onScreenshotTook(null)}
+                onClick={() => onScreenshotTook(null)}
             >
                 <BiTrash />
             </button>
