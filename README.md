@@ -4,6 +4,7 @@ Dev Controle é um sistema avançado de gerenciamento onde usuários prestadores
 
 ## Demonstração do Projeto
 Abaixo está uma demonstração visual do projeto em funcionamento:  
+![Devcontrolegif](https://github.com/LeoNzZ7/Dev-Controle/blob/master/dev-controle.gif)
 
 ## Acesso ao Projeto Implantado
 O Dev Controle está disponível online e pode ser acessado através do seguinte link:  [Dev Controle](https://dev-controle-orcin.vercel.app/)  
